@@ -1,0 +1,197 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: monospace;
+}
+
+body {
+  /* background-color: slategray; */
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+  width: 0.6rem;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background-color: cyan;
+}
+
+/* Button style 1 */
+
+.button-style-1 {
+  padding: 0.4rem 2rem;
+  border-radius: 50px;
+  color: cyan;
+  overflow: hidden;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  position: relative;
+  transition: all 0.2s ease-out;
+}
+
+.button-style-1::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  border: 2px solid cyan;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.button-style-1::after {
+  content: "";
+  width: 100%;
+  height: 0;
+  background-color: cyan;
+  transform: skewY(-5deg) translateY(-0.4rem) scale(1.2);
+  transition: all 0.2s ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.button-style-1:hover {
+  cursor: pointer;
+  color: slategray;
+}
+
+.button-style-1:hover::after {
+  height: 140%;
+}
+
+/* Button style 2 */
+
+.button-style-2 {
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    border: 1px solid cyan;
+    color: cyan;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+  
+  .button-style-2:hover {
+    cursor: pointer;
+    color: slategray;
+    background-color: cyan;
+    box-shadow: 2px 2px 2rem 0 cyan;
+  }
+  
+  /* Button style 3 */
+  
+  .button-style-3 {
+    width: 10rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-radius: 50px;
+    border: 1px solid cyan;
+    color: slategray;
+    background-color: cyan;
+    box-shadow: 0.3rem 0.3rem 0.8rem 0 rgba(0, 0, 0, 0.3);
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    transition: all 0.2s ease-out;
+  }
+  
+  .button-style-3:hover {
+    cursor: pointer;
+  }
+/* Navbar */
+
+nav {
+    width: 100%;
+    height: 10vh;
+    color: cyan;
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  nav > ul {
+    height: 50%;
+    list-style-type: none;
+    display: flex;
+  }
+  
+  nav > ul > li {
+    color: inherit;
+    margin-left: 2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  nav > ul > li > a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  nav > ul > li:first-child > a {
+    display: flex;
+    align-items: center;
+    padding-right: 2rem;
+    border-right: 2px solid cyan;
+  }
+  
+  nav > ul > li:first-child > a > span:first-child {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  nav > ul > li:first-child > a > span:last-child {
+    margin-left: 0.5rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  nav > div > a {
+    margin-right: 2rem;
+  }
+  
+  nav > div > a:last-child {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  nav > input[type="checkbox"] {
+    opacity: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    z-index: 3;
+  }
+  
+  nav > svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0.5rem;
+    border-radius: 1px;
+    border: 1px solid cyan;
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    z-index: 2;
+  }

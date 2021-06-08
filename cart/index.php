@@ -1,53 +1,5 @@
 <?php
-  include '../config.php';
-  if(isset($_GET['transaction_id'])){
-    $id = $_GET['transaction_id'];
-    $query = "SELECT * FROM tran_products WHERE id=$id";
-    $res = mysqli_query($db_con, $query);
-    if(!res) echo "<script> alert('Cant find this transaction')</script>";
-
-    // CREATE TABLE `products` (
-    //   `id` int(11) NOT NULL,
-    //   `name` varchar(45) NOT NULL,
-    //   `imgURL` varchar(200) DEFAULT NULL,
-    //   `status` varchar(45) NOT NULL,
-    //   `quantity` int(11) NOT NULL,
-    //   `unit` varchar(45) DEFAULT NULL,
-    //   `price` varchar(45) NOT NULL,
-    //   `type` varchar(45) NOT NULL,
-    //   `about` varchar(500) DEFAULT NULL
-    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-    // CREATE TABLE `transactions` (
-    //   `id` int(11) NOT NULL,
-    //   `date_created` datetime DEFAULT NULL,
-    //   `address` varchar(45) DEFAULT NULL,
-    //   `status` varchar(45) NOT NULL,
-    //   `date_completed` datetime DEFAULT NULL,
-    //   `money` int(11) DEFAULT NULL,
-    //   `about` varchar(500) DEFAULT NULL,
-    //   `userid` int(11) NOT NULL
-    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-    // CREATE TABLE `tran_products` (
-    //   `tran_id` int(11) NOT NULL,
-    //   `pro_id` int(11) NOT NULL,
-    //   `quantity` int(11) NOT NULL
-    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-    
-    $list_proc = array();
-    $row = mysqli_fetch_assoc($res);
-    while($row){
-      if (@!$list_proc[$row['pro_id']]){
-        $list_proc[$row['pro_id']] = $row['quantity'];
-      }
-      else{
-        $list_proc[$row['pro_id']] += $row['quantity'];
-      }
-    }
-    $list_key = array_keys($list_proc);
-
-  }
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
+    
     <div class="container mt-3">
       <div class="row">
         <div class="container col-8">
@@ -75,13 +28,23 @@
             
 
             <!-- Dùng vòng for, trong mỗi lần lặp in tương ứng mỗi mặt hàng sẽ in ra hết đoạn code dưới đây thay đổi tên và giá bán-->
-            <?php
+            <?php          
+              
+              include '../config.php';
+              // var_dump($_SESSION);
               $totalPrice = 0;
-              for($i = 0; $i < count($list_proc); $i++){
-                $query = "SELECT * FROM products WHERE id = $list_key[$i]";
-                $res = mysqli_query($db_con, $query);
-                if (@!$res) continue;
-                $row = mysqli_fetch_assoc($res);
+              foreach ($_SESSION['cart'] as $key => $value) {
+                // $arr[3] will be updated with each value from $arr...
+                //echo "{$key} => {$value} ";
+                // print_r($arr);
+                $result = mysqli_query($db_con, "SELECT name, imgURL, price FROM products WHERE id='$key'");
+                while ($row = mysqli_fetch_array($result)) {
+                  $imgURL = $row['imgURL'];
+                  $price = $row['price'];
+                  $name = $row['name'];
+                }
+                $quantity = $_SESSION['cart'][$key];     
+             
               
             ?>
             <div class="col-lg-6">
@@ -89,7 +52,7 @@
                 <div class="row no-gutters">
                   <div class="col-md-4">
                     <img
-                      src="https://photo-1-baomoi.zadn.vn/w720x480/2020_03_05_119_34191826/4af6afa0b0e359bd00f2.jpg"
+                      src="<?php echo $imgURL;?>"
                       class="card-img w-100 h-100"
                       alt="..."
                     />
@@ -97,23 +60,21 @@
                   <div class="col-md-8">
                     <div class="card-body">
                       <h5 class="card-title">
-                        <?php $row['name']?>
-                        Bánh mì
+                        <?php echo $name;?>
                         <button type="button" class="close">
                           <span>&times;</span>
                         </button>
                       </h5>
-                      <p class="card-text">
-                      <?php echo $row['price'];?>
-                        Price: 20,000
+                      <p class="card-text">                      
+                        Price: <?php echo $price;?>
                       </p>
                       <div class="form-group">
                         <input
                           type="number"
                           min="0"
-                          max="10"
+                          value="<?php echo $quantity; ?>"                          
                           class="form-control"
-                          placeholder= <?php echo $list_proc[$list_key[$i]];?>
+                          placeholder= <?php //echo $list_proc[$list_key[$i]];?>
                         />
                       </div>
                     </div>
@@ -122,11 +83,31 @@
               </div>
             </div>
             <?php
-              $totalPrice += $list_proc[$list_key[$i]] * $row['price'];
+              $real_price = intval(str_replace('.','',$price));
+              $totalPrice += $quantity * $real_price;
+            }
               $VAT = "10%";
-              $VAT_Price = intval($totalPrice) * 0.1;
-              $final_Price = intval($totalPrice) * 1.1;
+              function numberToString($num){
+                $temp = 1;
+                $res = "";
+                $str = strval($num);
+                for($i = strlen($str) - 1; $i >=0 ; $i--){
+                  if($temp % 3 == 0){
+                    $res = '.'.$str[$i].$res;
+                    $temp = 1;
+                  }
+                  else{
+                    $res = $str[$i].$res;
+                    $temp++;
+                  }
+                }
+                return $res;
               }
+              $VAT_Price = numberToString(intval($totalPrice * 0.1));
+              $final_Price = numberToString(intval($totalPrice * 1.1));
+              $totalPrice = numberToString(intval($totalPrice));
+
+              
             ?>
             <!-- End for -->
 
@@ -152,7 +133,7 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

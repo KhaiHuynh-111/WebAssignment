@@ -634,11 +634,15 @@ input:valid ~ label.placeholder
 {
   top: 3px;
   font-size: 10px;
+  opacity: 1;
+}
+
+input:focus + .Fs-H{
   opacity: 0;
 }
 
-input:focus + .Fs-H,input:valid + .Fs-H{
-  opacity: 1;
+input:valid + .Fs-H{
+  opacity: 0;
 }
 
 .popup button{

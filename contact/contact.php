@@ -17,10 +17,10 @@
             </svg>
 
             <ul>
-                <li><a href="../index.html"><span>logitech</span><span>G</span></a></li>
-                <li><a href="../products/product.html">Products</a></li>
+                <li><a href="../index.php"><span>logitech</span><span>G</span></a></li>
+                <li><a href="../products/product.php">Products</a></li>
                 <li><a href="#">About Us</a></li>
-                <li><a href="./contact.html">Contact</a></li>
+                <li><a href="./contact.php">Contact</a></li>
                 <li><a href="#">Community</a></li>
 
                 <li class="last-nav-li hidden"><a href="#" class="button-style-2">Sign Up</a></li>
@@ -357,39 +357,41 @@
             <p>© 2021 Logitech. All Rights Reserved.</p>
 
             <div class="popup" id="popup1">
-                <h1>Sign in</h1>
-    
-                <div class="sign-in-input">
-                    <div class="fields">
-                        <div class="fieldset">
-                            <input type="text" class="before-FS" required="" autocomplete="off">
-                            <h1 class="Fs-H"> <span>Email or phone</span></h1>
-                            <label class="placeholder">Email or phone</label>
-                        </div>
+            <h1>Sign in</h1>
+
+            <form action="/login.php" method="post">
+            <div class="sign-in-input">
+                <div class="fields">
+                    <div class="fieldset">
+                        <input type="text" class="before-FS" required="" autocomplete="off" name="username">
+                        <h1 class="Fs-H"> <span>Email or phone</span></h1>
+                        <label class="placeholder">Email or phone</label>
                     </div>
-    
-                    <div class="fields">
-                        <div class="fieldset">
-                            <input type="text" class="before-FS" required="" autocomplete="off">
-                            <h1 class="Fs-H"> <span>Password</span></h1>
-                            <label class="placeholder">Password</label>
-                            <label class="Remember-me">
-                                <input type="checkbox" class="custom-checkbox"/>
-                                <span style="color:cyan; position: absolute; left: 25px; top: 60px">Remember me?</span>
-                            </label>
-                        </div>
+                </div>
+
+                <div class="fields">
+                    <div class="fieldset">
+                        <input type="text" class="before-FS" required="" autocomplete="off" name="password">
+                        <h1 class="Fs-H"> <span>Password</span></h1>
+                        <label class="placeholder">Password</label>
+                        <label class="Remember-me">
+                            <input type="checkbox" class="custom-checkbox" />
+                            <span style="color:cyan; position: absolute; left: 25px; top: 60px">Remember me?</span>
+                        </label>
                     </div>
-                    
                 </div>
-    
-                <div class="login-option">
-                    <button onclick="hide('popup1')">Cancel</button>
-                    <button>Login</button>
-                    <a href=# class="clear"> Forgot Password?</a>
-                </div>
+
             </div>
+
+            <div class="login-option">
+                <button onclick="hide('popup1')">Cancel</button>
+                <button>Login</button>
+                <a href=# class="clear"> Forgot Password?</a>
+            </div>
+            </form>
+        </div>
     
-            <script src="../script.js"></script>
+            <script src="/script.js"></script>
         </footer>
     </body>
 </html>
