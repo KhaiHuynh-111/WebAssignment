@@ -1,9 +1,18 @@
 <?php
-  // include '../config.php';
+  include '../config.php';
+  // add 2 table
+  // product_img (id, img_link)
+  // product_spec (id, )
 
-  // if(isset($_GET['pro_id'])){}
-  // $query = "SELECT * FROM ad WHERE *";
-  // mysqli_close($db_con);
+  if(isset($_GET['proc_id'])){
+    $id = $_GET['proc_id'];
+    $query = "SELECT * FROM product_img WHERE id=$id";
+    $res = mysqli_query($db_con, $query);
+    if(!$res) echo "<script> alert('Cant find this product!') </script>";  
+  }
+
+  
+  mysqli_close($db_con);
 ?>
 
 <!DOCTYPE html>
@@ -28,16 +37,33 @@
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
                 <div class="carousel-inner bg-secondary">
-                  <div class="carousel-item active">
-                    <!-- Thay đổi hình của sản phẩm -->
-                    <img src="../products/imgs/mouses/G series/G304 (NEW, WIRELESS LIGHTSPEED).webp" class="d-block w-100" alt="...">
+                  <?php
+                    $row = mysqli_fetch_assoc($res);                    
+                    $flag = 1;
+                    echo '<div class="carousel-item active">                  
+                    <img src="'.$row['img_link'].'" class="d-block w-100" alt="...">
+                    </div>';
+                    
+                    $row = mysqli_fetch_assoc($res);
+
+                    while($row){
+                        echo '<div class="carousel-item">     
+                        <img src="'.$row['img_link'].'" class="d-block w-100" alt="...">
+                        </div>';
+                        
+                        $row = mysqli_fetch_assoc($res);
+                    }
+                  ?>
+                  <!-- <div class="carousel-item active">                  
+                     Thay đổi hình của sản phẩm -->
+                    <!-- <img src="../products/imgs/mouses/G series/G304 (NEW, WIRELESS LIGHTSPEED).webp" class="d-block w-100" alt="...">
                   </div>
                   <div class="carousel-item">
                     <img src="../products/imgs/mouses/G series/G304 (NEW, WIRELESS LIGHTSPEED).webp" class="d-block w-100" alt="...">
                   </div>
                   <div class="carousel-item">
                     <img src="../products/imgs/mouses/G series/G304 (NEW, WIRELESS LIGHTSPEED).webp" class="d-block w-100" alt="...">
-                  </div>
+                  </div> -->  -->
                 </div>
                 <!-- Giữ nguyên 2 button -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -51,6 +77,12 @@
             </div>
     
             <!-- Thay đổi tùy mặt hàng các giá trị dưới đây -->
+            <?php
+              $id = $_GET['proc_id'];
+              $query = "SELECT * FROM product_spec WHERE id=$id";
+              $res = mysqli_query($db_con, $query);
+              $row = mysqli_fetch_assoc($res);
+            ?>
             <div class="details col-6">
                 <h4 class="text-primary">NEW</h4>
                 <h1>G304</h1>

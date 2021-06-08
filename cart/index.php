@@ -1,3 +1,54 @@
+<?php
+  include '../config.php';
+  if(isset($_GET['transaction_id'])){
+    $id = $_GET['transaction_id'];
+    $query = "SELECT * FROM tran_products WHERE id=$id";
+    $res = mysqli_query($db_con, $query);
+    if(!res) echo "<script> alert('Cant find this transaction')</script>";
+
+    // CREATE TABLE `products` (
+    //   `id` int(11) NOT NULL,
+    //   `name` varchar(45) NOT NULL,
+    //   `imgURL` varchar(200) DEFAULT NULL,
+    //   `status` varchar(45) NOT NULL,
+    //   `quantity` int(11) NOT NULL,
+    //   `unit` varchar(45) DEFAULT NULL,
+    //   `price` varchar(45) NOT NULL,
+    //   `type` varchar(45) NOT NULL,
+    //   `about` varchar(500) DEFAULT NULL
+    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    // CREATE TABLE `transactions` (
+    //   `id` int(11) NOT NULL,
+    //   `date_created` datetime DEFAULT NULL,
+    //   `address` varchar(45) DEFAULT NULL,
+    //   `status` varchar(45) NOT NULL,
+    //   `date_completed` datetime DEFAULT NULL,
+    //   `money` int(11) DEFAULT NULL,
+    //   `about` varchar(500) DEFAULT NULL,
+    //   `userid` int(11) NOT NULL
+    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+    // CREATE TABLE `tran_products` (
+    //   `tran_id` int(11) NOT NULL,
+    //   `pro_id` int(11) NOT NULL,
+    //   `quantity` int(11) NOT NULL
+    // ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    
+    $list_proc = array();
+    $row = mysqli_fetch_assoc($res);
+    while($row){
+      if (@!$list_proc[$row['pro_id']]){
+        $list_proc[$row['pro_id']] = $row['quantity'];
+      }
+      else{
+        $list_proc[$row['pro_id']] += $row['quantity'];
+      }
+    }
+    $list_key = array_keys($list_proc);
+
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -24,6 +75,15 @@
             
 
             <!-- Dùng vòng for, trong mỗi lần lặp in tương ứng mỗi mặt hàng sẽ in ra hết đoạn code dưới đây thay đổi tên và giá bán-->
+            <?php
+              $totalPrice = 0;
+              for($i = 0; $i < count($list_proc); $i++){
+                $query = "SELECT * FROM products WHERE id = $list_key[$i]";
+                $res = mysqli_query($db_con, $query);
+                if (@!$res) continue;
+                $row = mysqli_fetch_assoc($res);
+              
+            ?>
             <div class="col-lg-6">
               <div class="card mb-3" style="max-width: 540px;">
                 <div class="row no-gutters">
@@ -37,12 +97,14 @@
                   <div class="col-md-8">
                     <div class="card-body">
                       <h5 class="card-title">
+                        <?php $row['name']?>
                         Bánh mì
                         <button type="button" class="close">
                           <span>&times;</span>
                         </button>
                       </h5>
                       <p class="card-text">
+                      <?php echo $row['price'];?>
                         Price: 20,000
                       </p>
                       <div class="form-group">
@@ -51,7 +113,7 @@
                           min="0"
                           max="10"
                           class="form-control"
-                          placeholder="Number of items"
+                          placeholder= <?php echo $list_proc[$list_key[$i]];?>
                         />
                       </div>
                     </div>
@@ -59,6 +121,13 @@
                 </div>
               </div>
             </div>
+            <?php
+              $totalPrice += $list_proc[$list_key[$i]] * $row['price'];
+              $VAT = "10%";
+              $VAT_Price = intval($totalPrice) * 0.1;
+              $final_Price = intval($totalPrice) * 1.1;
+              }
+            ?>
             <!-- End for -->
 
             
@@ -70,11 +139,11 @@
         <div class="col-4 mb-3">
           <div class="jumbotron">
             <h1 class="display-4">Receipt</h1>
-            <p>Sum: 85,000</p>
-            <p>VAT: 12,750 (15%)</p>
+            <p>Sum: <?php echo $totalPrice; ?></p>
+            <p>VAT: <?php echo $VAT_Price; ?> (10%)</p>
             <p>Discount: 0 (0%)</p>
             <hr class="my-4" />
-            <p class="lead">Total: 97,750.</p>
+            <p class="lead">Total: <?php echo $final_Price; ?>.</p>
             <a class="btn btn-primary" href="#" role="button">Checkout</a>
             <br>
             <a href="#" class="btn pt-3 p-0">Continue Shopping</a>
